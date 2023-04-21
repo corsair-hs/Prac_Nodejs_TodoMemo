@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 // localhost의 27017 포트 번호로 MongoDB와 연결합니다.
 // Database Name은 todo-demo 입니다.
-mongoose.connect("mongodb://localhost:27017/todo-demo", {
+// mongoose.connect("mongodb://localhost:27017/todo-demo", {
+mongoose.connect("mongodb://127.0.0.1:27017/todo-demo", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
