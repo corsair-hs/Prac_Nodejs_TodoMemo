@@ -43,7 +43,7 @@ router.patch("/todos/:todoId", async (req, res) => {
   const currentTodo = await TodoDB.findById(todoId);
   if (!currentTodo) {
     return res.status(400).json({"errorMessage": "존재하지 않는 할 일 입니다."});
-  }
+  };
 
   // 2. order에 값이 있을 경우에는 순서를 변경한다.
   if (order) {
@@ -61,5 +61,27 @@ router.patch("/todos/:todoId", async (req, res) => {
   };
   res.send();
 });
+
+
+// 할 일 삭제 API
+router.delete("/todos/:todoId", async (req, res) => {
+  const {todoId} = req.params;
+
+  // 1. todoId에 해당하는 할 일이 있는가?
+  // 1-1. todoId에 해당하는 할 일이 없으면, 에러 출력
+  const currentTodo = await TodoDB.findById(todoId);
+  if (!currentTodo) {
+    return res.status(400).json({"errorMessage": "존재하지 않는 할 일 입니다."});
+  };
+
+  // 2. todoId에 값이 있을 경우에는 삭제한다.
+  if (todoId) {
+    await currentTodo.deleteOne();
+  }
+  res.send();
+});
+
+
+
 
 module.exports = router;
