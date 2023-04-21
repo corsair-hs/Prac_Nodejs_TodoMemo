@@ -58,13 +58,11 @@ router.patch("/todos/:todoId", async (req, res) => {
     // 그리고 기존 DB에 있던 order값을 바꿔줘야지
     currentTodo.order = order;
     await currentTodo.save();
-  };
+  }
 
   // 3. done에 값이 있을 경우에는 done 값 변경 ---------------------------------------------------
-  if (done) {
-    const doneAt = new Date();
-    await currentTodo.updateOne({doneAt});
-  };
+  const doneAt = done ? new Date() : null;
+  await currentTodo.updateOne({doneAt});
 
   // 4. value에 값이 있을 경우에는 value 값 변경 ---------------------------------------------------
   if (value) {
