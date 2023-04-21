@@ -33,6 +33,33 @@ router.get("/todos", async (req, res) => {
 });
 
 
+// 할 일 순서 변경 API
+router.patch("/todos/:todoId", async (req, res) => {
+  const {todoId} = req.params;
+  const {order} = req.body;
 
+  // 1. todoId에 해당하는 할 일이 있는가?
+  // 1-1. todoId에 해당하는 할 일이 없으면, 에러 출력
+  const currentTodo = await TodoDB.findById(todoId);
+  if (!currentTodo) {
+    return res.status(400).json({"errorMessage": "존재하지 않는 할 일 입니다."});
+  }
+
+  // 2. order에 값이 있을 경우에는 순서를 변경한다.
+  if (order) {
+    const targetTodo = await TodoDB.findOne({order}).exec();
+    // targetTodo 값이 존재유무 체크
+    if (targetTodo) {
+      // targetTodo.order(방금 DB에서 order로 찾은 order)를 currentTodo.order(아까 DB에서 todoId로 찾은 order로 교체)
+      targetTodo.order = currentTodo.order;
+      // 그리고 저장
+      await targetTodo.save();
+    }
+    // 그리고 기존 DB에 있던 order값을 바꿔줘야지
+    currentTodo.order = order;
+    await currentTodo.save();
+  };
+  res.send();
+});
 
 module.exports = router;
