@@ -6,7 +6,7 @@ router.get("/", (req, res) => {
   res.send("Hi!");
 });
 
-// 할 일 추가 API
+// 할 일 생성 API
 router.post("/todos", async (req, res) => {
   const {value} = req.body;
 
@@ -33,19 +33,19 @@ router.get("/todos", async (req, res) => {
 });
 
 
-// 할 일 순서 변경 API
+// 할 일 수정 API - 순서(order), 값(value), 체크(done)
 router.patch("/todos/:todoId", async (req, res) => {
   const {todoId} = req.params;
-  const {order} = req.body;
+  const {order, done, value} = req.body;
 
-  // 1. todoId에 해당하는 할 일이 있는가?
+  // 1. todoId에 해당하는 할 일이 있는가? ---------------------------------------------------
   // 1-1. todoId에 해당하는 할 일이 없으면, 에러 출력
   const currentTodo = await TodoDB.findById(todoId);
   if (!currentTodo) {
     return res.status(400).json({"errorMessage": "존재하지 않는 할 일 입니다."});
   };
 
-  // 2. order에 값이 있을 경우에는 순서를 변경한다.
+  // 2. order에 값이 있을 경우에는 순서를 변경한다. ---------------------------------------------------
   if (order) {
     const targetTodo = await TodoDB.findOne({order}).exec();
     // targetTodo 값이 존재유무 체크
@@ -59,6 +59,19 @@ router.patch("/todos/:todoId", async (req, res) => {
     currentTodo.order = order;
     await currentTodo.save();
   };
+
+  // 3. done에 값이 있을 경우에는 done 값 변경 ---------------------------------------------------
+  if (done) {
+    const doneAt = new Date();
+    await currentTodo.updateOne({doneAt});
+  };
+
+  // 4. value에 값이 있을 경우에는 value 값 변경 ---------------------------------------------------
+  if (value) {
+    currentTodo.value = value;
+    await currentTodo.save();
+  };
+
   res.send();
 });
 
@@ -80,8 +93,5 @@ router.delete("/todos/:todoId", async (req, res) => {
   }
   res.send();
 });
-
-
-
 
 module.exports = router;
