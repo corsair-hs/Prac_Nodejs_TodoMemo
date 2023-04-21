@@ -13,7 +13,7 @@ TodoSchema.virtual("todoId").get(()=>this._id.toHexString());
 
 // TodoSchema를 사용하기 위해서 어떤 타입으로 변경을 했을 때 보여줄 거냐에 대한 설정
 // 위의 todoId를 JSON 형태로 변환하였을 때 보여준다라는 의미
-TodoSchema.set("toJSON", {virtuals: ture});
+TodoSchema.set("toJSON", {virtuals: true});
 
 // TodoSchema를 외부로 내보내주기
 module.exports = mongoose.model("Todo", TodoSchema);
