@@ -2,6 +2,7 @@ const express = require("express");   // express library 가져오고
 const app = express();                // express로 app객체를 만들고
 // const router = express.Router();      // express로 Router 만들고
 const todosRouter = require("./routes/todos.router.js");
+const db = require("./models/index.js");
 const PORT = '8080';                  // HTTP Port :8080
 
 
